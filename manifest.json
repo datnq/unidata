@@ -1,0 +1,8 @@
+{
+  "short_name": "Unidata example",
+  "name": "@datnq/unidata Example",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
