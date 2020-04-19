@@ -1,7 +1,11 @@
-import './index.css'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import { withUnidata } from '@datnq/unidata'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+import App from './App'
+import './index.css'
+
+const data = {}
+const AppContainer = withUnidata(data)(App)
+
+ReactDOM.render(<AppContainer />, document.getElementById('root'))

@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@datnq/unidata": "link:..",
+    "@datnq/usemodel": "^1.0.3",
     "react": "link:../node_modules/react",
     "react-dom": "link:../node_modules/react-dom",
-    "react-scripts": "link:../node_modules/react-scripts",
-    "@datnq/unidata": "link:.."
+    "react-scripts": "link:../node_modules/react-scripts"
   },
   "scripts": {
     "start": "node ../node_modules/react-scripts/bin/react-scripts.js start",

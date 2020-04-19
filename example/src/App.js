@@ -1,10 +1,15 @@
 import React from 'react'
+import Counter from './counter'
+import AddTodo from './addTodo'
+import TodoList from './todoList'
 
-import { ExampleComponent } from '@datnq/unidata'
-import '@datnq/unidata/dist/index.css'
-
-const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+export default function App() {
+  return (
+    <>
+      <AddTodo />
+      <hr />
+      <Counter />
+      <TodoList />
+    </>
+  )
 }
-
-export default App
