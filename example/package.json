@@ -1,11 +1,11 @@
 {
   "name": "@datnq/unidata-example",
-  "homepage": "https://datnq.github.io/@datnq/unidata",
+  "homepage": "https://datnq.github.io/unidata",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
     "@datnq/unidata": "link:..",
-    "@datnq/usemodel": "^1.0.3",
+    "@datnq/usemodel": "^1.1.0",
     "react": "link:../node_modules/react",
     "react-dom": "link:../node_modules/react-dom",
     "react-scripts": "link:../node_modules/react-scripts"

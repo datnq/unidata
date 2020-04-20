@@ -1029,9 +1029,9 @@
   uid ""
 
 "@datnq/usemodel@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@datnq/usemodel/-/usemodel-1.0.3.tgz#2c2e1382126c43d8af1ed5233f2ef5aa981b77db"
-  integrity sha512-tt24N4Y8SJfYtF2/ACMKHVKtGpBQ6Yl07L83gm4yBMyNgQ9ekso4g/iSYDihe0ZNSo3jF9O4hA4OkPULsYc7pg==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@datnq/usemodel/-/usemodel-1.1.0.tgz#4ddfac2c0254d2c4b69331edd58ffce2396479d9"
+  integrity sha512-560lB/7/icmWWG2de1zm/RjmUidlVblh0+MujM+aSL5gOgphnu+7RExkUWFrjHhtTCZm72Gk07KGD2rWpgnQyg==
 
 "@hapi/address@2.x.x":
   version "2.1.4"
@@ -1410,11 +1410,6 @@
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.4.tgz#38fd73ddfd9b55abb1e1b2ed578cb55bd7b7d339"
   integrity sha512-8+KAKzEvSUdeo+kmqnKrqgeE+LcA0tjYWFY7RPProVYwnqDjukzO+3b6dLD56rYX5TdWejnEOLJYOIeh4CXKuA==
-
-"@types/lodash@^4.14.150":
-  version "4.14.150"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.150.tgz#649fe44684c3f1fcb6164d943c5a61977e8cf0bd"
-  integrity sha512-kMNLM5JBcasgYscD9x/Gvr6lTAv2NVgsKtet/hm93qMyf/D1pt+7jeEZklKJKxMVmXjxbRVQQGfqDSfipYCO6w==
 
 "@types/minimatch@*":
   version "3.0.3"

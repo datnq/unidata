@@ -1,4 +1,4 @@
-import { required, minlen } from '@datnq/usemodel/lib/validators'
+import { required, minlen } from '@datnq/usemodel/dist/validators.ts'
 import { Field } from '@datnq/usemodel'
 
 class CheckboxField extends Field {
