@@ -20,6 +20,8 @@ const AddTodo = ({ dataSetter }) => {
     todo.clearData()
   }
 
+  console.log('Rendered Add Todo')
+
   return (
     <div>
       <input
@@ -47,6 +49,4 @@ const AddTodo = ({ dataSetter }) => {
     </div>
   )
 }
-export default subscribe({
-  todos: [],
-})(AddTodo)
+export default subscribe()(AddTodo)

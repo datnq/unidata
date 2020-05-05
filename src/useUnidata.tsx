@@ -1,16 +1,23 @@
-import _ from 'lodash'
+import mapValues from 'lodash/mapValues'
+import values from 'lodash/values'
+import pick from 'lodash/pick'
 import React, { useContext, useEffect } from 'react'
 import { UnidataContext } from './provider'
+import { ISubscribedComponentProps } from './types'
 
 export const useUnidata = (subscribed: object) => {
-  const { dataSetter, data = {}, initData } = useContext(UnidataContext)
+  const { dataSetter, dataState = {}, data = {}, initData } = useContext(
+    UnidataContext
+  )
 
   let changed = false
-  const subscribedData = _.mapValues(subscribed, (v, k) => {
+  const subscribedData = mapValues(subscribed, (v, k) => {
     if (data[k] !== undefined || data[k] === v) return data[k]
     changed = true
     return v
   })
+
+  const subscribedState = pick(dataState, Object.keys(subscribed))
 
   useEffect(() => {
     if (changed && typeof initData === 'function') {
@@ -18,20 +25,17 @@ export const useUnidata = (subscribed: object) => {
     }
   }, [changed])
 
-  return [subscribedData, dataSetter]
+  return [subscribedData, dataSetter, subscribedState]
 }
 
-interface ISubscribedComponentProps {
-  deps: string
-}
-
-export const subscribe = (subscribed: object) => (
+export const subscribe = (subscribed?: object) => (
   WrappedComponent: React.ElementType
 ) => (props: React.Props<any>) => {
-  const [data, dataSetter] = useUnidata(subscribed)
+  const [data, dataSetter, subscribedState] = useUnidata(subscribed || {})
   const parentProps = { ...props }
-  const deps = JSON.stringify(data)
-  const SubscribedComponent: React.FC<ISubscribedComponentProps> = () => (
+  const deps = values(subscribedState).join('-')
+
+  const SubscribedComponent: React.ElementType<ISubscribedComponentProps> = () => (
     <WrappedComponent data={data} dataSetter={dataSetter} {...parentProps} />
   )
   return React.useMemo(() => <SubscribedComponent deps={deps} />, [deps])

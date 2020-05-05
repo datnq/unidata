@@ -1,51 +1,45 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useCallback, createContext } from 'react'
-import _ from 'lodash'
-import { getFilterFunction, IFilterFn } from './utils'
-
-interface IUnidataContext {
-  dataSetter: {
-    put: (name: string, value: any) => void
-    add: (name: string, value: any) => void
-    remove: (name: string, filter: IFilterFn, force?: boolean) => void
-    update: (name: string, filter: IFilterFn, value: any) => void
-  }
-  data: object
-  initData: (value: any) => void
-}
-
-interface IUnidataProviderProps {
-  initialData: object
-  setData: React.Dispatch<React.SetStateAction<object>>
-}
+import isEqual from 'lodash/isEqual'
+import { getFilterFunction, generateDataState } from './utils'
+import { IUnidataProviderProps, IFilterFn, IUnidataContext } from './types'
 
 export const UnidataContext = createContext<Partial<IUnidataContext>>({})
 
 let unidata = {}
+let dataState = {}
+
 export const UnidataProvider = ({
   initialData,
   children,
 }: React.PropsWithChildren<IUnidataProviderProps>) => {
   const [, forceUpdate] = useState()
 
+  const updateDataState = (newData: object) => {
+    dataState = generateDataState(dataState, newData)
+    forceUpdate(dataState)
+  }
+
   useEffect(() => {
-    if (!_.isEqual(unidata, initialData)) forceUpdate({ ...initialData })
+    if (!isEqual(unidata, initialData)) {
+      updateDataState(initialData)
+    }
   }, [initialData])
 
   const initData = useCallback(
     (value) => {
       const newData = { ...value, ...unidata }
-      if (!_.isEqual(Object.keys(newData), Object.keys(unidata))) {
+      if (!isEqual(Object.keys(newData), Object.keys(unidata))) {
         unidata = { ...value, ...unidata }
-        forceUpdate({ ...unidata })
+        updateDataState(newData)
       }
     },
-    [unidata]
+    [dataState]
   )
 
   const put = (name: string, value: any): void => {
     unidata[name] = Array.isArray(value) ? [...value] : value
-    forceUpdate({ ...unidata })
+    updateDataState({ [name]: value })
   }
 
   const dataSetter = {
@@ -102,7 +96,9 @@ export const UnidataProvider = ({
     },
   }
   return (
-    <UnidataContext.Provider value={{ data: unidata, dataSetter, initData }}>
+    <UnidataContext.Provider
+      value={{ data: unidata, dataState, dataSetter, initData }}
+    >
       {children}
     </UnidataContext.Provider>
   )
