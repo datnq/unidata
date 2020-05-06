@@ -6,7 +6,7 @@ import { UnidataContext } from './provider'
 import { ISubscribedComponentProps } from './types'
 
 export const useUnidata = (subscribed: object) => {
-  const { dataSetter, dataState = {}, data = {}, initData } = useContext(
+  const { dataSetter, state = {}, data = {}, initData } = useContext(
     UnidataContext
   )
 
@@ -17,7 +17,7 @@ export const useUnidata = (subscribed: object) => {
     return v
   })
 
-  const subscribedState = pick(dataState, Object.keys(subscribed))
+  const subscribedState = pick(state, Object.keys(subscribed))
 
   useEffect(() => {
     if (changed && typeof initData === 'function') {

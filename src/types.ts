@@ -18,7 +18,12 @@ export interface IUnidataContext {
     remove: (name: string, filter: IFilterFn, force?: boolean) => void
     update: (name: string, filter: IFilterFn, value: any) => void
   }
-  dataState: object
+  state: object
   data: object
   initData: (value: any) => void
+}
+
+export interface IUnidataRef {
+  data: object,
+  state: object
 }
