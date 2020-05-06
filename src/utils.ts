@@ -10,9 +10,4 @@ export const getFilterFunction = (filter: IFilterFn): IFilterFn =>
           (k) => item[k] !== undefined && filter[k] === item[k]
         )
 
-export const generateDataState = (currentState: object, newData: object) => {
-  return {
-    ...currentState,
-    ...mapValues(newData, () => shortid.generate()),
-  }
-}
+export const generateDataState = (newData: object) => mapValues(newData, () => shortid.generate())

@@ -8,10 +8,11 @@ const TodoList = ({ data, dataSetter }) => {
     const {
       target: { checked, value },
     } = e
+    const newTodos = [...todos]
     const index = parseInt(value, 10)
     const updated = todos[index]
-    todos[index] = { ...updated, completed: checked }
-    dataSetter.put('todos', todos)
+    newTodos[index] = { ...updated, completed: checked }
+    dataSetter.put('todos', newTodos)
   }
 
   console.log('Rendered Todo list')
