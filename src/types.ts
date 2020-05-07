@@ -24,6 +24,6 @@ export interface IUnidataContext {
 }
 
 export interface IUnidataRef {
-  data: object,
+  data: object
   state: object
 }

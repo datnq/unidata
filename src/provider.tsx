@@ -1,35 +1,47 @@
 import React, { useState, useCallback, createContext, useRef } from 'react'
-import isEqual from 'lodash/isEqual'
-import { getFilterFunction, generateDataState } from './utils'
-import { IUnidataProviderProps, IFilterFn, IUnidataContext, IUnidataRef } from './types'
+import { isEqual } from 'lodash'
+import { getFilterFunction, generateDataState, getDisplayName } from './utils'
+import {
+  IUnidataProviderProps,
+  IFilterFn,
+  IUnidataContext,
+  IUnidataRef,
+} from './types'
 
 export const UnidataContext = createContext<Partial<IUnidataContext>>({})
+UnidataContext.displayName = 'UnidataContext'
 
 export const UnidataProvider = ({
   initialData,
   children,
 }: React.PropsWithChildren<IUnidataProviderProps>) => {
-  const unidata = useRef<IUnidataRef>({ data: initialData, state: generateDataState(initialData) })
+  const unidata = useRef<IUnidataRef>({
+    data: initialData,
+    state: generateDataState(initialData),
+  })
   const [, forceUpdate] = useState(unidata.current.state)
 
   const updateDataState = (newData: object) => {
-    unidata.current.state = { ...unidata.current.state, ...generateDataState(newData) }
+    unidata.current.state = {
+      ...unidata.current.state,
+      ...generateDataState(newData),
+    }
     forceUpdate(unidata.current.state)
   }
 
-  const initData = useCallback(
-    (data) => {
-      const newData = { ...data, ...unidata.current.data }
-      if (!isEqual(Object.keys(newData), Object.keys(unidata.current.data))) {
-        unidata.current.data = { ...data, ...unidata.current.data }
-        updateDataState(newData)
-      }
-    },
-    []
-  )
+  const initData = useCallback((data) => {
+    const newData = { ...data, ...unidata.current.data }
+    if (!isEqual(Object.keys(newData), Object.keys(unidata.current.data))) {
+      unidata.current.data = { ...data, ...unidata.current.data }
+      updateDataState(newData)
+    }
+  }, [])
 
   const put = (name: string, value: any): void => {
-    if (!isEqual(unidata.current.data[name], value) || !unidata.current.state[name]) {
+    if (
+      !isEqual(unidata.current.data[name], value) ||
+      !unidata.current.state[name]
+    ) {
       unidata.current.data[name] = Array.isArray(value) ? [...value] : value
       updateDataState({ [name]: value })
     }
@@ -89,12 +101,14 @@ export const UnidataProvider = ({
   return (
     <UnidataContext.Provider
       value={{
-        ...unidata.current, initData, dataSetter: {
+        ...unidata.current,
+        initData,
+        dataSetter: {
           put,
           add,
           remove,
-          update
-        }
+          update,
+        },
       }}
     >
       {children}
@@ -104,11 +118,15 @@ export const UnidataProvider = ({
 
 export const withUnidata = (initialData: object | undefined) => (
   App: React.ElementType
-) => (props: React.Props<any>) => {
-  const [data, setData] = useState(initialData || {})
-  return (
-    <UnidataProvider initialData={data} setData={setData}>
-      <App {...props} />
-    </UnidataProvider>
-  )
+) => {
+  const WithUnidataApp = (props: object): JSX.Element => {
+    const [data, setData] = useState(initialData || {})
+    return (
+      <UnidataProvider initialData={data} setData={setData}>
+        <App {...props} />
+      </UnidataProvider>
+    )
+  }
+  WithUnidataApp.displayName = getDisplayName('Unidata', App)
+  return WithUnidataApp
 }

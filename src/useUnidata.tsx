@@ -1,9 +1,8 @@
-import mapValues from 'lodash/mapValues'
-import values from 'lodash/values'
-import pick from 'lodash/pick'
+import { mapValues, values, pick } from 'lodash'
 import React, { useContext, useEffect } from 'react'
 import { UnidataContext } from './provider'
 import { ISubscribedComponentProps } from './types'
+import { getDisplayName } from './utils'
 
 export const useUnidata = (subscribed: object) => {
   const { dataSetter, state = {}, data = {}, initData } = useContext(
@@ -30,13 +29,24 @@ export const useUnidata = (subscribed: object) => {
 
 export const subscribe = (subscribed?: object) => (
   WrappedComponent: React.ElementType
-) => (props: React.Props<any>) => {
-  const [data, dataSetter, subscribedState] = useUnidata(subscribed || {})
-  const parentProps = { ...props }
-  const deps = values(subscribedState).join('-')
+) => {
+  const MemoizedUnidataComponent = (props: object): JSX.Element => {
+    const [data, dataSetter, subscribedState] = useUnidata(subscribed || {})
+    const parentProps = { ...props }
+    const deps = values(subscribedState).join('-')
 
-  const SubscribedComponent: React.ElementType<ISubscribedComponentProps> = () => (
-    <WrappedComponent data={data} dataSetter={dataSetter} {...parentProps} />
+    const SubscribedComponent: React.ElementType<ISubscribedComponentProps> = () => (
+      <WrappedComponent data={data} dataSetter={dataSetter} {...parentProps} />
+    )
+    SubscribedComponent.displayName = getDisplayName(
+      'UnidataSubscribed',
+      WrappedComponent
+    )
+    return React.useMemo(() => <SubscribedComponent deps={deps} />, [deps])
+  }
+  MemoizedUnidataComponent.displayName = getDisplayName(
+    'UnidataMemoized',
+    WrappedComponent
   )
-  return React.useMemo(() => <SubscribedComponent deps={deps} />, [deps])
+  return MemoizedUnidataComponent
 }
