@@ -1,29 +1,31 @@
-export interface ISubscribedComponentProps {
+export type SubscribedComponentProps = {
   deps: string
 }
 
-export interface IUnidataProviderProps {
-  initialData: object
-  setData: React.Dispatch<React.SetStateAction<object>>
+export type UnidataProviderProps = {
+  initialData: DataCollection
+  setData: React.Dispatch<React.SetStateAction<DataCollection>>
 }
 
-export interface IFilterFn {
-  (item: string, index?: number, array?: Array<any>): boolean
-}
+export type FilterFn = (item: any, index?: number, array?: Array<any>) => boolean
 
-export interface IUnidataContext {
+export type DataCollection = { [name: string]: any }
+
+export type DataStateCollection = {[name:string]: string}
+
+export type UnidataContextType = {
   dataSetter: {
     put: (name: string, value: any) => void
     add: (name: string, value: any) => void
-    remove: (name: string, filter: IFilterFn, force?: boolean) => void
-    update: (name: string, filter: IFilterFn, value: any) => void
+    remove: (name: string, filter: FilterFn, force?: boolean) => void
+    update: (name: string, filter: FilterFn, value: any) => void
   }
-  state: object
-  data: object
-  initData: (value: any) => void
+  state: DataStateCollection
+  data: DataCollection
+  initData: (data: DataCollection) => void
 }
 
-export interface IUnidataRef {
-  data: object
-  state: object
+export type UnidataRef = {
+  data: DataCollection
+  state: DataStateCollection
 }

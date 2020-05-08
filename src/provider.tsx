@@ -2,26 +2,27 @@ import React, { useState, useCallback, createContext, useRef } from 'react'
 import { isEqual } from 'lodash'
 import { getFilterFunction, generateDataState, getDisplayName } from './utils'
 import {
-  IUnidataProviderProps,
-  IFilterFn,
-  IUnidataContext,
-  IUnidataRef,
+  UnidataProviderProps,
+  FilterFn,
+  UnidataContextType,
+  UnidataRef,
+  DataCollection,
 } from './types'
 
-export const UnidataContext = createContext<Partial<IUnidataContext>>({})
+export const UnidataContext = createContext<Partial<UnidataContextType>>({})
 UnidataContext.displayName = 'UnidataContext'
 
-export const UnidataProvider = ({
+export const UnidataProvider: React.FC<UnidataProviderProps> = ({
   initialData,
-  children,
-}: React.PropsWithChildren<IUnidataProviderProps>) => {
-  const unidata = useRef<IUnidataRef>({
+  children
+}) => {
+  const unidata = useRef<UnidataRef>({
     data: initialData,
     state: generateDataState(initialData),
   })
   const [, forceUpdate] = useState(unidata.current.state)
 
-  const updateDataState = (newData: object) => {
+  const updateDataState = (newData: DataCollection) => {
     unidata.current.state = {
       ...unidata.current.state,
       ...generateDataState(newData),
@@ -56,7 +57,7 @@ export const UnidataProvider = ({
       put(name, [...d, value])
     }
   }
-  const remove = (name: string, filter: IFilterFn, forced = false): void => {
+  const remove = (name: string, filter: FilterFn, forced = false): void => {
     if (!filter && !forced) {
       throw new Error(
         'Filter is required for remove data. Unless you pass force = true'
@@ -77,7 +78,7 @@ export const UnidataProvider = ({
       )
     }
   }
-  const update = (name: string, filter: IFilterFn, value: any): void => {
+  const update = (name: string, filter: FilterFn, value: any): void => {
     if (!filter) throw new Error('Filter is required for update data')
 
     const d = unidata.current.data[name]
@@ -119,7 +120,7 @@ export const UnidataProvider = ({
 export const withUnidata = (initialData: object | undefined) => (
   App: React.ElementType
 ) => {
-  const WithUnidataApp = (props: object): JSX.Element => {
+  const WithUnidataApp = (props: object) => {
     const [data, setData] = useState(initialData || {})
     return (
       <UnidataProvider initialData={data} setData={setData}>
