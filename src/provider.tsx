@@ -1,4 +1,4 @@
-import React, { useState, useCallback, createContext, useRef } from 'react'
+import React, { useState, useCallback, createContext, useRef, PropsWithChildren } from 'react'
 import { isEqual } from 'lodash'
 import { getFilterFunction, generateDataState, getDisplayName } from './utils'
 import {
@@ -12,10 +12,14 @@ import {
 export const UnidataContext = createContext<Partial<UnidataContextType>>({})
 UnidataContext.displayName = 'UnidataContext'
 
-export const UnidataProvider: React.FC<UnidataProviderProps> = ({
+/**
+ * Wrapper of UnidataContext.Provider
+ * @param {UnidataProviderProps} props 
+ */
+export const UnidataProvider = ({
   initialData,
   children
-}) => {
+}: PropsWithChildren<UnidataProviderProps>) => {
   const unidata = useRef<UnidataRef>({
     data: initialData,
     state: generateDataState(initialData),
@@ -117,7 +121,11 @@ export const UnidataProvider: React.FC<UnidataProviderProps> = ({
   )
 }
 
-export const withUnidata = (initialData: object | undefined) => (
+/**
+ * Create application wrapper with UnidataContext.Provider included
+ * @param {DataCollection} initialData Initial data, format { name: value }
+ */
+export const withUnidata = (initialData?: DataCollection) => (
   App: React.ElementType
 ) => {
   const WithUnidataApp = (props: object) => {

@@ -4,7 +4,11 @@ import { UnidataContext } from './provider'
 import { SubscribedComponentProps, DataCollection } from './types'
 import { getDisplayName } from './utils'
 
-export const useUnidata = (subscribed: DataCollection) => {
+/**
+ * Hooks to return data the Component is listening to, state key, and data setter functions
+ * @param {DataCollection} subscribed Data which the component want to subscribe to. { name: defaultValue }
+ */
+export const useUnidata = (subscribed: DataCollection = {}) => {
   const { dataSetter, state = {}, data = {}, initData } = useContext(
     UnidataContext
   )
@@ -27,6 +31,10 @@ export const useUnidata = (subscribed: DataCollection) => {
   return [subscribedData, dataSetter, subscribedState]
 }
 
+/**
+ * Subscribe this component to specific data. Once those data change, Component will be rerender
+ * @param {DataCollection} subscribed Data which the component want to subscribe to. { name: defaultValue }
+ */
 export const subscribe = (subscribed?: DataCollection) => (
   WrappedComponent: React.ElementType
 ) => {
