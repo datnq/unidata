@@ -1,17 +1,23 @@
 import { mapValues, values, pick } from 'lodash'
 import React, { useContext, useEffect } from 'react'
 import { UnidataContext } from './provider'
-import { SubscribedComponentProps, DataCollection } from './types'
+import {
+  SubscribedComponentProps,
+  DataCollection,
+  FilterFn,
+  DataStateCollection,
+  UnidataAction,
+} from './types'
 import { getDisplayName } from './utils'
 
 /**
  * Hooks to return data the Component is listening to, state key, and data setter functions
  * @param {DataCollection} subscribed Data which the component want to subscribe to. { name: defaultValue }
  */
-export const useUnidata = (subscribed: DataCollection = {}) => {
-  const { dataSetter, state = {}, data = {}, initData } = useContext(
-    UnidataContext
-  )
+export const useUnidata = (
+  subscribed: DataCollection = {}
+): [DataCollection, React.Dispatch<UnidataAction>, DataStateCollection] => {
+  const { dispatch, state = {}, data = {} } = useContext(UnidataContext)
 
   let changed = false
   const subscribedData = mapValues(subscribed, (v, k) => {
@@ -23,12 +29,15 @@ export const useUnidata = (subscribed: DataCollection = {}) => {
   const subscribedState = pick(state, Object.keys(subscribed))
 
   useEffect(() => {
-    if (changed && typeof initData === 'function') {
-      initData({ ...data, ...subscribedData })
+    if (changed) {
+      dispatch({
+        type: 'init',
+        data: { ...data, ...subscribedData },
+      })
     }
-  }, [changed])
+  }, [changed, data, dispatch, subscribedData])
 
-  return [subscribedData, dataSetter, subscribedState]
+  return [subscribedData, dispatch, subscribedState]
 }
 
 /**
@@ -39,12 +48,26 @@ export const subscribe = (subscribed?: DataCollection) => (
   WrappedComponent: React.ElementType
 ) => {
   const MemoizedUnidataComponent = (props: object): JSX.Element => {
-    const [data, dataSetter, subscribedState] = useUnidata(subscribed || {})
+    const [data, dispatch, subscribedState] = useUnidata(subscribed || {})
     const parentProps = { ...props }
     const deps = values(subscribedState).join('-')
 
+    const dispatcher = {
+      put: (name: string, value: any) => dispatch({ type: 'put', name, value }),
+      add: (name: string, value: any) => dispatch({ type: 'add', name, value }),
+      update: (name: string, filter: FilterFn, value: any) =>
+        dispatch({ type: 'update', name, value, filter }),
+      remove: (name: string, filter: FilterFn, forced = false) =>
+        dispatch({
+          type: 'remove',
+          filter,
+          name,
+          forced,
+        }),
+    }
+
     const SubscribedComponent: React.ElementType<SubscribedComponentProps> = () => (
-      <WrappedComponent data={data} dataSetter={dataSetter} {...parentProps} />
+      <WrappedComponent data={data} dispatcher={dispatcher} {...parentProps} />
     )
     SubscribedComponent.displayName = getDisplayName(
       'UnidataSubscribed',

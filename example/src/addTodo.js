@@ -4,7 +4,7 @@ import { useModel } from '@datnq/usemodel'
 import { subscribe } from '@datnq/unidata'
 import todoModel from './model/todos'
 
-const AddTodo = ({ dataSetter }) => {
+const AddTodo = ({ dispatcher }) => {
   const inputRef = useRef(null)
   const todo = useModel(todoModel)
   const { content, completed } = todo
@@ -16,7 +16,7 @@ const AddTodo = ({ dataSetter }) => {
   const addtodo = (e) => {
     e.preventDefault()
     if (!todo.isValid) return
-    dataSetter.add('todos', todo.data)
+    dispatcher.add('todos', todo.data)
     todo.clearData()
   }
 

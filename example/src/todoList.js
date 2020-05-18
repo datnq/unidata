@@ -1,7 +1,7 @@
 import React from 'react'
 import { subscribe } from '@datnq/unidata'
 
-const TodoList = ({ data, dataSetter }) => {
+const TodoList = ({ data, dispatcher }) => {
   const { todos } = data
 
   const change = (e) => {
@@ -12,7 +12,7 @@ const TodoList = ({ data, dataSetter }) => {
     const index = parseInt(value, 10)
     const updated = todos[index]
     newTodos[index] = { ...updated, completed: checked }
-    dataSetter.put('todos', newTodos)
+    dispatcher.put('todos', newTodos)
   }
 
   console.log('Rendered Todo list')

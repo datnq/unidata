@@ -6,14 +6,16 @@ export type SubscribedComponentProps = {
  * UnidataContext.Provider props
  * @typedef {Object} UnidataProviderProps
  * @property {DataCollection} initialData
- * @property {React.Dispatch<React.SetStateAction<DataCollection>>} setData Set global data's state
  */
 export type UnidataProviderProps = {
   initialData: DataCollection
-  setData: React.Dispatch<React.SetStateAction<DataCollection>>
 }
 
-export type FilterFn = (item: any, index?: number, array?: Array<any>) => boolean
+export type FilterFn = (
+  item: any,
+  index?: number,
+  array?: Array<any>
+) => boolean
 
 /**
  * Data storage
@@ -21,21 +23,52 @@ export type FilterFn = (item: any, index?: number, array?: Array<any>) => boolea
  */
 export type DataCollection = { [name: string]: any }
 
-export type DataStateCollection = {[name:string]: string}
+export type DataStateCollection = { [name: string]: string }
 
 export type UnidataContextType = {
-  dataSetter: {
-    put: (name: string, value: any) => void
-    add: (name: string, value: any) => void
-    remove: (name: string, filter: FilterFn, force?: boolean) => void
-    update: (name: string, filter: FilterFn, value: any) => void
-  }
+  dispatch: React.Dispatch<UnidataAction>
   state: DataStateCollection
   data: DataCollection
-  initData: (data: DataCollection) => void
 }
 
-export type UnidataRef = {
+export type UnidataType = {
   data: DataCollection
   state: DataStateCollection
 }
+
+type InitAction = {
+  type: 'init'
+  data: DataCollection
+}
+type PutAction = {
+  type: 'put'
+  name: string
+  value: any
+}
+
+type AddAction = {
+  type: 'add'
+  name: string
+  value: any
+}
+
+type UpdateAction = {
+  type: 'update'
+  name: string
+  filter: FilterFn
+  value: any
+}
+
+type RemoveAction = {
+  type: 'remove'
+  name: string
+  filter: FilterFn
+  forced?: boolean
+}
+
+export type UnidataAction =
+  | InitAction
+  | AddAction
+  | PutAction
+  | UpdateAction
+  | RemoveAction
