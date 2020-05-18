@@ -1,4 +1,10 @@
-import React, { useState, useCallback, createContext, useRef, PropsWithChildren } from 'react'
+import React, {
+  useState,
+  useCallback,
+  createContext,
+  PropsWithChildren,
+  useLayoutEffect,
+} from 'react'
 import { isEqual } from 'lodash'
 import { getFilterFunction, generateDataState, getDisplayName } from './utils'
 import {
@@ -12,48 +18,50 @@ import {
 export const UnidataContext = createContext<Partial<UnidataContextType>>({})
 UnidataContext.displayName = 'UnidataContext'
 
+const UnidataStore: UnidataRef = {
+  data: {},
+  state: {},
+}
+
 /**
  * Wrapper of UnidataContext.Provider
- * @param {UnidataProviderProps} props 
+ * @param {UnidataProviderProps} props
  */
 export const UnidataProvider = ({
   initialData,
-  children
+  children,
 }: PropsWithChildren<UnidataProviderProps>) => {
-  const unidata = useRef<UnidataRef>({
-    data: initialData,
-    state: generateDataState(initialData),
-  })
-  const [, forceUpdate] = useState(unidata.current.state)
+  const [, forceUpdate] = useState(UnidataStore.state)
 
   const updateDataState = (newData: DataCollection) => {
-    unidata.current.state = {
-      ...unidata.current.state,
+    UnidataStore.state = {
+      ...UnidataStore.state,
       ...generateDataState(newData),
     }
-    forceUpdate(unidata.current.state)
+    forceUpdate(UnidataStore.state)
   }
 
   const initData = useCallback((data) => {
-    const newData = { ...data, ...unidata.current.data }
-    if (!isEqual(Object.keys(newData), Object.keys(unidata.current.data))) {
-      unidata.current.data = { ...data, ...unidata.current.data }
+    const newData = { ...data, ...UnidataStore.data }
+    if (!isEqual(Object.keys(newData), Object.keys(UnidataStore.data))) {
+      UnidataStore.data = { ...data, ...UnidataStore.data }
       updateDataState(newData)
     }
   }, [])
 
+  useLayoutEffect(() => {
+    initData(initialData)
+  }, [initData, initialData])
+
   const put = (name: string, value: any): void => {
-    if (
-      !isEqual(unidata.current.data[name], value) ||
-      !unidata.current.state[name]
-    ) {
-      unidata.current.data[name] = Array.isArray(value) ? [...value] : value
+    if (!isEqual(UnidataStore.data[name], value) || !UnidataStore.state[name]) {
+      UnidataStore.data[name] = Array.isArray(value) ? [...value] : value
       updateDataState({ [name]: value })
     }
   }
 
   const add = (name: string, value: any): void => {
-    const d = unidata.current.data[name]
+    const d = UnidataStore.data[name]
 
     if (!Array.isArray(d)) {
       put(name, value)
@@ -68,7 +76,7 @@ export const UnidataProvider = ({
       )
     }
 
-    const d = unidata.current.data[name]
+    const d = UnidataStore.data[name]
     if (!Array.isArray(d) || forced) {
       delete d[name]
 
@@ -85,7 +93,7 @@ export const UnidataProvider = ({
   const update = (name: string, filter: FilterFn, value: any): void => {
     if (!filter) throw new Error('Filter is required for update data')
 
-    const d = unidata.current.data[name]
+    const d = UnidataStore.data[name]
 
     if (!Array.isArray(d) || typeof value !== 'object') {
       put(name, value)
@@ -106,7 +114,7 @@ export const UnidataProvider = ({
   return (
     <UnidataContext.Provider
       value={{
-        ...unidata.current,
+        ...UnidataStore,
         initData,
         dataSetter: {
           put,

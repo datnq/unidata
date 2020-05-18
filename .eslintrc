@@ -6,8 +6,10 @@
     "plugin:prettier/recommended",
     "prettier/standard",
     "prettier/react",
-    "plugin:@typescript-eslint/eslint-recommended"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:react-hooks/recommended"
   ],
+  "plugins": ["react-hooks"],
   "env": {
     "node": true
   },
