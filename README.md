@@ -43,22 +43,34 @@ yarn add @datnq/unidata
 
 ```jsx
 // app.js or index.js
-import { withUnidata } from '@datnq/unidata'
+import { UnidataProvider } from '@datnq/unidata'
 import App from './App'
 
-const AppContainer = withUnidata()(App)
-
-ReactDOM.render(<AppContainer />, document.getElementById('root'))
+ReactDOM.render(
+  <UnidataProvider>
+    <App />
+  </UnidataProvider>,
+  document.getElementById('root')
+)
 ```
 
 With initial data
 
-```js
-const AppContainer = withUnidata({
-  todos: [
-    // initial data item
-  ],
-})(App)
+```jsx
+// app.js or index.js
+import { UnidataProvider } from '@datnq/unidata'
+import App from './App'
+
+const data = {
+  todos: [],
+}
+
+ReactDOM.render(
+  <UnidataProvider initialData={data}>
+    <App />
+  </UnidataProvider>,
+  document.getElementById('root')
+)
 ```
 
 ### In component
