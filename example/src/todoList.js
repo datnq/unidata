@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { subscribe } from '@datnq/unidata'
+import { createLogger } from './logger'
 
 const TodoList = ({ data, dispatcher }) => {
   const { todos } = data
+
+  const log = createLogger(dispatcher)
 
   const change = (e) => {
     const {
@@ -15,7 +18,9 @@ const TodoList = ({ data, dispatcher }) => {
     dispatcher.put('todos', newTodos)
   }
 
-  console.log('Rendered Todo list')
+  useEffect(() => {
+    log('Rendering Todo list')
+  })
 
   return (
     <ol>

@@ -5,7 +5,9 @@ import { UnidataProvider } from '@datnq/unidata'
 import App from './App'
 import './index.css'
 
-const data = {}
+const data = {
+  logs: [],
+}
 
 ReactDOM.render(
   <UnidataProvider initialData={data}>

@@ -1,10 +1,13 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useModel } from '@datnq/usemodel'
 import { subscribe } from '@datnq/unidata'
 import todoModel from './model/todos'
+import { createLogger } from './logger'
 
 const AddTodo = ({ dispatcher }) => {
+  const log = createLogger(dispatcher)
+
   const inputRef = useRef(null)
   const todo = useModel(todoModel)
   const { content, completed } = todo
@@ -20,7 +23,9 @@ const AddTodo = ({ dispatcher }) => {
     todo.clearData()
   }
 
-  console.log('Rendered Add Todo')
+  useEffect(() => {
+    log('Rendered Add Todo')
+  })
 
   return (
     <div>

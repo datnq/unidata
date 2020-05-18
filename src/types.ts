@@ -27,13 +27,19 @@ export type DataStateCollection = { [name: string]: string }
 
 export type UnidataContextType = {
   dispatch: React.Dispatch<UnidataAction>
-  state: DataStateCollection
-  data: DataCollection
+  store: UnidataType
 }
 
 export type UnidataType = {
   data: DataCollection
   state: DataStateCollection
+}
+
+export type Dispatcher = {
+  put: (name: string, value: any) => void
+  add: (name: string, value: any) => void
+  update: (name: string, filter: FilterFn, value: any) => void
+  remove: (name: string, filter: FilterFn, forced?: boolean) => void
 }
 
 type InitAction = {

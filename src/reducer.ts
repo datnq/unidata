@@ -6,6 +6,19 @@ export const initializer = (initialData: DataCollection) => {
   return { data: initialData, state: generateDataState(initialData) }
 }
 
+const updater = (unidata: UnidataType, newData: DataCollection) => {
+  return {
+    data: {
+      ...unidata.data,
+      ...newData,
+    },
+    state: {
+      ...unidata.state,
+      ...generateDataState(newData),
+    },
+  }
+}
+
 export const reducer = (unidata: UnidataType, action: any): UnidataType => {
   const { type, name, value, filter, forced, data } = action
   const d = unidata.data[name]
@@ -13,16 +26,13 @@ export const reducer = (unidata: UnidataType, action: any): UnidataType => {
 
   const put = (name: string, value: any) =>
     !isEqual(unidata.data[name], value) || !unidata.state[name]
-      ? initializer({
-          ...unidata.data,
-          [name]: Array.isArray(value) ? [...value] : value,
-        })
+      ? updater(unidata, { [name]: Array.isArray(value) ? [...value] : value })
       : unidata
 
   switch (type) {
     case 'init':
       return !isEqual(Object.keys(newData), Object.keys(unidata.data))
-        ? initializer({ ...data, ...unidata.data })
+        ? updater(unidata, newData)
         : unidata
     case 'put':
       return put(name, value)
