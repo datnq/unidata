@@ -7,6 +7,8 @@ import './index.css'
 
 const data = {
   logs: [],
+  counter: 0,
+  todos: [],
 }
 
 ReactDOM.render(

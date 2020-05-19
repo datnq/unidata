@@ -1,5 +1,5 @@
 import { mapValues, values, pick } from 'lodash'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { UnidataContext } from './provider'
 import {
   SubscribedComponentProps,
@@ -8,7 +8,7 @@ import {
   UnidataType,
   Dispatcher,
 } from './types'
-import { getDisplayName } from './utils'
+import { getDisplayName, hasOwn } from './utils'
 
 /**
  * Hooks to return data the Component is listening to, state key, and data setter functions
@@ -22,6 +22,7 @@ export const useUnidata = (
 
   const changedData: DataCollection = {}
   const subscribedData = mapValues(subscribed, (v, k) => {
+    if (!hasOwn(data, k)) throw Error('You only can subscribe to known data')
     if (data[k] !== undefined || data[k] === v) return data[k]
     changedData[k] = v
     return v
@@ -48,14 +49,14 @@ export const useUnidata = (
       }),
   }
 
-  useEffect(() => {
-    if (Object.keys(changedData)) {
-      dispatch({
-        type: 'init',
-        data: changedData,
-      })
-    }
-  }, [changedData, data, dispatch, subscribedData])
+  // useEffect(() => {
+  //   if (Object.keys(changedData)) {
+  //     dispatch({
+  //       type: 'init',
+  //       data: changedData,
+  //     })
+  //   }
+  // }, [changedData, data, dispatch, subscribedData])
 
   return [unidata, dispatcher]
 }

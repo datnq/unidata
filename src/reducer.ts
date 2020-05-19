@@ -21,6 +21,7 @@ const updater = (unidata: UnidataType, newData: DataCollection) => {
 
 export const reducer = (unidata: UnidataType, action: any): UnidataType => {
   const { type, name, value, filter, forced, data } = action
+
   const d = unidata.data[name]
   const newData = { ...data, ...unidata.data }
 
