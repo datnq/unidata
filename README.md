@@ -29,7 +29,7 @@ Package
 
 ### Demo
 
-[http://datnq.github.io/unidata]
+http://datnq.github.io/unidata
 
 ### Run install
 
