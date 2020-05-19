@@ -20,10 +20,10 @@ export const useUnidata = (
   const { dispatch, store } = useContext(UnidataContext)
   const { data, state } = store
 
-  let changed = false
+  const changedData: DataCollection = {}
   const subscribedData = mapValues(subscribed, (v, k) => {
     if (data[k] !== undefined || data[k] === v) return data[k]
-    changed = true
+    changedData[k] = v
     return v
   })
 
@@ -49,13 +49,13 @@ export const useUnidata = (
   }
 
   useEffect(() => {
-    if (changed) {
+    if (Object.keys(changedData)) {
       dispatch({
         type: 'init',
-        data: { ...data, ...subscribedData },
+        data: changedData,
       })
     }
-  }, [changed, data, dispatch, subscribedData])
+  }, [changedData, data, dispatch, subscribedData])
 
   return [unidata, dispatcher]
 }

@@ -24,7 +24,7 @@ const AddTodo = ({ dispatcher }) => {
   }
 
   useEffect(() => {
-    log('Rendered Add Todo')
+    log('Rendering Add Todo')
   })
 
   return (
