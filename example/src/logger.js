@@ -9,11 +9,12 @@ export const createLogger = (dispatcher) => (content) => {
 export default subscribe({ logs: [] })(({ data }) => {
   const { logs } = data
   return (
-    logs &&
-    logs.map((log, i) => (
-      <p key={log.id}>
-        {i + 1}. {log.content}
-      </p>
-    ))
+    logs && (
+      <ol>
+        {logs.map((log) => (
+          <li key={log.id}>{log.content}</li>
+        ))}
+      </ol>
+    )
   )
 })

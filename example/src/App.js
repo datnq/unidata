@@ -17,7 +17,7 @@ export default function App() {
       <div style={{ display: 'flex', height: '100vh', alignItems: 'stretch' }}>
         <div style={colStyles}>
           <a
-            href='https://github.com/you'
+            href='https://github.com/datnq/unidata'
             style={{ position: 'absolute', right: 0, top: 0 }}
           >
             <img

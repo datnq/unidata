@@ -93,7 +93,7 @@ export default subscribe({
 
 ## Clone from source
 
-```
+```bash
 git clone https://github.com/datnq/unidata
 ```
 
