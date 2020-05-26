@@ -6,7 +6,7 @@ import {
   DataCollection,
   FilterFn,
   UnidataType,
-  Dispatcher,
+  Dispatcher
 } from './types'
 import { getDisplayName } from './utils'
 
@@ -31,7 +31,7 @@ export const useUnidata = (
 
   const unidata = {
     data: subscribedData,
-    state: subscribedState,
+    state: subscribedState
   }
 
   const dispatcher = {
@@ -44,15 +44,15 @@ export const useUnidata = (
         type: 'remove',
         filter,
         name,
-        forced,
-      }),
+        forced
+      })
   }
 
   useEffect(() => {
     if (Object.keys(changedData)) {
       dispatch({
         type: 'init',
-        data: changedData,
+        data: changedData
       })
     }
   }, [changedData, data, dispatch, subscribedData])

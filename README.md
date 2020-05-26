@@ -29,7 +29,7 @@ Package
 
 ### Demo
 
-http://datnq.github.io/unidata
+[http://datnq.github.io/unidata]
 
 ### Run install
 
@@ -66,7 +66,7 @@ import { UnidataProvider } from '@datnq/unidata'
 import App from './App'
 
 const data = {
-  todos: [],
+  todos: []
 }
 
 ReactDOM.render(
@@ -87,7 +87,7 @@ const TodoList = ({ data, dataSetter }) => {
 }
 
 export default subscribe({
-  todos: [],
+  todos: []
 })(TodoList)
 ```
 

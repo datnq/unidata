@@ -10,12 +10,12 @@ const updater = (unidata: UnidataType, newData: DataCollection) => {
   return {
     data: {
       ...unidata.data,
-      ...newData,
+      ...newData
     },
     state: {
       ...unidata.state,
-      ...generateDataState(newData),
-    },
+      ...generateDataState(newData)
+    }
   }
 }
 
