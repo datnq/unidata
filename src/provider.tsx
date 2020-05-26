@@ -6,10 +6,10 @@ import { reducer, initializer } from './reducer'
 export const UnidataContext = createContext<UnidataContextType>({
   store: {
     data: {},
-    state: {}
+    state: {},
   },
 
-  dispatch: () => {}
+  dispatch: () => {},
 })
 UnidataContext.displayName = 'UnidataContext'
 
@@ -19,7 +19,7 @@ UnidataContext.displayName = 'UnidataContext'
  */
 export const UnidataProvider = ({
   initialData,
-  children
+  children,
 }: PropsWithChildren<UnidataProviderProps>) => {
   const [store, dispatch] = useReducer(reducer, initialData, initializer)
 
