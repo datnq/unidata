@@ -1,5 +1,5 @@
 export type SubscribedComponentProps = {
-  deps: string
+  state: string
 }
 
 /**
@@ -35,46 +35,7 @@ export type UnidataType = {
   state: DataStateCollection
 }
 
-export type Dispatcher = {
-  put: (name: string, value: any) => void
-  add: (name: string, value: any) => void
-  update: (name: string, filter: FilterFn, value: any) => void
-  remove: (name: string, filter: FilterFn, forced?: boolean) => void
+export type UnidataAction = {
+  type: string
+  payload: any
 }
-
-type InitAction = {
-  type: 'init'
-  data: DataCollection
-}
-type PutAction = {
-  type: 'put'
-  name: string
-  value: any
-}
-
-type AddAction = {
-  type: 'add'
-  name: string
-  value: any
-}
-
-type UpdateAction = {
-  type: 'update'
-  name: string
-  filter: FilterFn
-  value: any
-}
-
-type RemoveAction = {
-  type: 'remove'
-  name: string
-  filter: FilterFn
-  forced?: boolean
-}
-
-export type UnidataAction =
-  | InitAction
-  | AddAction
-  | PutAction
-  | UpdateAction
-  | RemoveAction

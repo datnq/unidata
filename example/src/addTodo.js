@@ -5,8 +5,8 @@ import { subscribe } from '@datnq/unidata'
 import todoModel from './model/todos'
 import { createLogger } from './logger'
 
-const AddTodo = ({ dispatcher }) => {
-  const log = createLogger(dispatcher)
+const AddTodo = ({ dispatch }) => {
+  const log = createLogger(dispatch)
 
   const inputRef = useRef(null)
   const todo = useModel(todoModel)
@@ -19,7 +19,10 @@ const AddTodo = ({ dispatcher }) => {
   const addtodo = (e) => {
     e.preventDefault()
     if (!todo.isValid) return
-    dispatcher.add('todos', todo.data)
+    dispatch({
+      type: 'add',
+      payload: { name: 'todos', value: todo.data },
+    })
     todo.clearData()
   }
 

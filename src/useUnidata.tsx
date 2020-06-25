@@ -4,9 +4,7 @@ import { UnidataContext } from './provider'
 import {
   SubscribedComponentProps,
   DataCollection,
-  FilterFn,
-  UnidataType,
-  Dispatcher,
+  UnidataAction,
 } from './types'
 import { getDisplayName } from './utils'
 
@@ -16,7 +14,7 @@ import { getDisplayName } from './utils'
  */
 export const useUnidata = (
   subscribed: DataCollection = {}
-): [UnidataType, Dispatcher] => {
+): [DataCollection, React.Dispatch<UnidataAction>, string] => {
   const { dispatch, store } = useContext(UnidataContext)
   const { data, state } = store
 
@@ -27,37 +25,20 @@ export const useUnidata = (
     return v
   })
 
-  const subscribedState = pick(state, Object.keys(subscribed))
+  const hasChanged = Object.keys(changedData).length > 0
 
-  const unidata = {
-    data: subscribedData,
-    state: subscribedState,
-  }
-
-  const dispatcher = {
-    put: (name: string, value: any) => dispatch({ type: 'put', name, value }),
-    add: (name: string, value: any) => dispatch({ type: 'add', name, value }),
-    update: (name: string, filter: FilterFn, value: any) =>
-      dispatch({ type: 'update', name, value, filter }),
-    remove: (name: string, filter: FilterFn, forced = false) =>
-      dispatch({
-        type: 'remove',
-        filter,
-        name,
-        forced,
-      }),
-  }
+  const subscribedState = values(pick(state, Object.keys(subscribed))).join('-')
 
   useEffect(() => {
-    if (Object.keys(changedData)) {
+    if (hasChanged) {
       dispatch({
         type: 'init',
-        data: changedData,
+        payload: { data: changedData },
       })
     }
-  }, [changedData, data, dispatch, subscribedData])
+  }, [hasChanged, dispatch, changedData])
 
-  return [unidata, dispatcher]
+  return [subscribedData, dispatch, subscribedState]
 }
 
 /**
@@ -68,22 +49,17 @@ export const subscribe = (subscribed?: DataCollection) => (
   WrappedComponent: React.ElementType
 ) => {
   const MemoizedUnidataComponent = (props: object): JSX.Element => {
-    const [unidata, dispatcher] = useUnidata(subscribed || {})
+    const [data, dispatch, state] = useUnidata(subscribed || {})
     const parentProps = { ...props }
-    const deps = values(unidata.state).join('-')
 
     const SubscribedComponent: React.ElementType<SubscribedComponentProps> = () => (
-      <WrappedComponent
-        data={unidata.data}
-        dispatcher={dispatcher}
-        {...parentProps}
-      />
+      <WrappedComponent data={data} dispatch={dispatch} {...parentProps} />
     )
     SubscribedComponent.displayName = getDisplayName(
       'UnidataSubscribed',
       WrappedComponent
     )
-    return React.useMemo(() => <SubscribedComponent deps={deps} />, [deps])
+    return React.useMemo(() => <SubscribedComponent state={state} />, [state])
   }
   MemoizedUnidataComponent.displayName = getDisplayName(
     'UnidataMemoized',
