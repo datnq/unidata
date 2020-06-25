@@ -2,20 +2,24 @@ import React, { useEffect } from 'react'
 import { subscribe } from '@datnq/unidata'
 import { createLogger } from './logger'
 
-const TodoList = ({ data, dispatcher }) => {
+const TodoList = ({ data, dispatch }) => {
   const { todos } = data
 
-  const log = createLogger(dispatcher)
+  const log = createLogger(dispatch)
 
   const change = (e) => {
     const {
       target: { checked, value },
     } = e
-    const newTodos = [...todos]
-    const index = parseInt(value, 10)
-    const updated = todos[index]
-    newTodos[index] = { ...updated, completed: checked }
-    dispatcher.put('todos', newTodos)
+
+    dispatch({
+      type: 'update',
+      payload: {
+        name: 'todos',
+        value: { completed: checked },
+        filter: (t, i) => i === parseInt(value, 10),
+      },
+    })
   }
 
   useEffect(() => {

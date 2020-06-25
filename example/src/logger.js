@@ -2,8 +2,14 @@ import React from 'react'
 import { subscribe } from '@datnq/unidata'
 import shortid from 'shortid'
 
-export const createLogger = (dispatcher) => (content) => {
-  dispatcher.add('logs', { content, id: shortid.generate() })
+export const createLogger = (dispatch) => (content) => {
+  dispatch({
+    type: 'add',
+    payload: {
+      name: 'logs',
+      value: { content, id: shortid.generate() },
+    },
+  })
 }
 
 export default subscribe({ logs: [] })(({ data }) => {

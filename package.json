@@ -1,6 +1,6 @@
 {
   "name": "@datnq/unidata",
-  "version": "1.4.5",
+  "version": "1.5",
   "description": "Simplify usage of managing datasource",
   "author": "datnq",
   "license": "MIT",

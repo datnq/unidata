@@ -31,6 +31,7 @@
     "react/jsx-handler-names": 0,
     "react/jsx-fragments": 0,
     "react/no-unused-prop-types": 0,
+    "react-hooks/exhaustive-deps": "warn",
     "import/export": 0,
     "no-unused-vars": 0,
     "object-literal-sort-keys": 0

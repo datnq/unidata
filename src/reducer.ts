@@ -20,9 +20,11 @@ const updater = (unidata: UnidataType, newData: DataCollection) => {
 }
 
 export const reducer = (unidata: UnidataType, action: any): UnidataType => {
-  const { type, name, value, filter, forced, data } = action
+  const { type, payload } = action
+
+  const { name, value } = payload
   const d = unidata.data[name]
-  const newData = { ...data, ...unidata.data }
+  const filter = getFilterFunction(payload.filter)
 
   const put = (name: string, value: any) =>
     !isEqual(unidata.data[name], value) || !unidata.state[name]
@@ -30,10 +32,12 @@ export const reducer = (unidata: UnidataType, action: any): UnidataType => {
       : unidata
 
   switch (type) {
-    case 'init':
+    case 'init': {
+      const newData = { ...payload.data, ...unidata.data }
       return !isEqual(Object.keys(newData), Object.keys(unidata.data))
         ? updater(unidata, newData)
         : unidata
+    }
     case 'put':
       return put(name, value)
     case 'add':
@@ -43,39 +47,35 @@ export const reducer = (unidata: UnidataType, action: any): UnidataType => {
         return put(name, [...d, value])
       }
     case 'update':
-      if (!filter) throw new Error('Filter is required for update data')
+      if (!payload.filter) throw new Error('Filter is required for update data')
 
       if (!Array.isArray(d) || typeof value !== 'object') {
         return put(name, value)
       } else {
-        const filterFn = getFilterFunction(filter)
         const doUpdate = (i: any, v: any) =>
           typeof i === 'object' ? { ...i, ...v } : v
 
         return put(
           name,
           d.map((item, index) =>
-            filterFn(item, index) ? doUpdate(item, value) : item
+            filter(item, index) ? doUpdate(item, value) : item
           )
         )
       }
     case 'remove':
-      if (!filter && !forced) {
+      if (!payload.filter && !payload.forced) {
         throw new Error(
           'Filter is required for remove data. Unless you pass force = true'
         )
       }
 
-      if (!Array.isArray(d) || forced) {
+      if (!Array.isArray(d) || payload.forced) {
         delete d[name]
-
         return put(name, d)
       } else {
-        const filterFn = getFilterFunction(filter)
-
         return put(
           name,
-          d.filter((item, index) => !filterFn(item, index))
+          d.filter((item, index) => !filter(item, index))
         )
       }
     default:

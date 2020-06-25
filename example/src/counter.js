@@ -3,11 +3,14 @@ import { subscribe } from '@datnq/unidata'
 import { createLogger } from './logger'
 
 class Counter extends React.PureComponent {
-  componentDidUpdate() {
-    this.log = createLogger(this.props.dispatcher)
+  constructor(props) {
+    super(props)
+    this.log = createLogger(this.props.dispatch)
+  }
+  componentDidMount() {
+    this.log && this.log('Rendering Todo Counter')
   }
   render() {
-    this.log && this.log('Rendering Todo Counter')
     const { data } = this.props
     return (
       <span>

@@ -2,12 +2,15 @@ import React, { useCallback, useEffect } from 'react'
 import { subscribe } from '@datnq/unidata'
 import { createLogger } from './logger'
 
-export default subscribe({ counter: 0 })(({ data, dispatcher }) => {
-  const log = createLogger(dispatcher)
+export default subscribe({ counter: 0 })(({ data, dispatch }) => {
+  const log = createLogger(dispatch)
 
   const increase = useCallback(() => {
-    dispatcher.put('counter', data.counter + 1)
-  }, [data.counter, dispatcher])
+    dispatch({
+      type: 'put',
+      payload: { name: 'counter', value: data.counter + 1 },
+    })
+  }, [data.counter, dispatch])
 
   useEffect(() => {
     log('Rendering Unrelated counter')
@@ -15,10 +18,10 @@ export default subscribe({ counter: 0 })(({ data, dispatcher }) => {
 
   return (
     <p>
-      {data.counter}{' '}
       <button type='button' onClick={increase}>
         + Increase
       </button>
+      {' ' + data.counter}
     </p>
   )
 })
