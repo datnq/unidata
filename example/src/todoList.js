@@ -12,7 +12,7 @@ const TodoList = ({ data, dispatch }) => {
       target: { checked, value },
     } = e
 
-    dispatch(({ todos }) => {
+    dispatch(({ todos, logs }) => {
       const index = parseInt(value, 10)
       todos[index].completed = checked
       return { todos }
