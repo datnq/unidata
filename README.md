@@ -50,8 +50,10 @@ yarn add @datnq/unidata
 import { UnidataProvider } from '@datnq/unidata'
 import App from './App'
 
+const initialData = {}
+
 ReactDOM.render(
-  <UnidataProvider>
+  <UnidataProvider initialData={initialData}>
     <App />
   </UnidataProvider>,
   document.getElementById('root')
@@ -66,7 +68,7 @@ import { UnidataProvider } from '@datnq/unidata'
 import App from './App'
 
 const data = {
-  todos: []
+  todos: [],
 }
 
 ReactDOM.render(
@@ -81,13 +83,21 @@ ReactDOM.render(
 
 ```jsx
 // todoList.js
-const TodoList = ({ data, dataSetter }) => {
+const TodoList = ({ data, dispatch }) => {
   const { todos } = data
   // ...
+
+  // call a updating dispatch
+  dispatch((prevData) => {
+    return {
+      // only return data which has changes
+      todos: [...prevData.todos, newTodoItem],
+    }
+  })
 }
 
 export default subscribe({
-  todos: []
+  todos: [],
 })(TodoList)
 ```
 
