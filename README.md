@@ -3,8 +3,6 @@
 Simplify usage of managing datasource
 
 [![NPM](https://img.shields.io/npm/v/@datnq/unidata.svg)](https://www.npmjs.com/package/@datnq/unidata)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f61e27c0392b4b84830794d1701ddb74)](https://www.codacy.com/manual/datnq/unidata?utm_source=github.com&utm_medium=referral&utm_content=datnq/unidata&utm_campaign=Badge_Grade)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![npm](https://img.shields.io/npm/dw/@datnq/unidata)](https://www.npmjs.com/package/@datnq/unidata)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@datnq/unidata)
 
