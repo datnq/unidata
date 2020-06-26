@@ -5,12 +5,8 @@ import { UnidataProvider } from '@datnq/unidata'
 import App from './App'
 import './index.css'
 
-const data = {
-  logs: [],
-}
-
 ReactDOM.render(
-  <UnidataProvider initialData={data}>
+  <UnidataProvider initialData={{}}>
     <App />
   </UnidataProvider>,
   document.getElementById('root')

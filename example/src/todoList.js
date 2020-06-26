@@ -12,13 +12,10 @@ const TodoList = ({ data, dispatch }) => {
       target: { checked, value },
     } = e
 
-    dispatch({
-      type: 'update',
-      payload: {
-        name: 'todos',
-        value: { completed: checked },
-        filter: (t, i) => i === parseInt(value, 10),
-      },
+    dispatch(({ todos }) => {
+      const index = parseInt(value, 10)
+      todos[index].completed = checked
+      return { todos }
     })
   }
 

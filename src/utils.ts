@@ -1,14 +1,6 @@
 import shortid from 'shortid'
 import { mapValues } from 'lodash'
-import { FilterFn, DataCollection, DataStateCollection } from './types'
-
-export const getFilterFunction = (filter: FilterFn): FilterFn =>
-  typeof filter === 'function'
-    ? filter
-    : (item: any) =>
-        Object.keys(filter).every(
-          (k) => item[k] !== undefined && filter[k] === item[k]
-        )
+import { DataCollection, DataStateCollection } from './types'
 
 export const generateDataState = (
   newData: DataCollection

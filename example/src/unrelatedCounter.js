@@ -6,11 +6,12 @@ export default subscribe({ counter: 0 })(({ data, dispatch }) => {
   const log = createLogger(dispatch)
 
   const increase = useCallback(() => {
-    dispatch({
-      type: 'put',
-      payload: { name: 'counter', value: data.counter + 1 },
+    dispatch(({ counter }) => {
+      return {
+        counter: counter + 1,
+      }
     })
-  }, [data.counter, dispatch])
+  }, [dispatch])
 
   useEffect(() => {
     log('Rendering Unrelated counter')

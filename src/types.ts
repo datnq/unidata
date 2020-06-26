@@ -11,12 +11,6 @@ export type UnidataProviderProps = {
   initialData: DataCollection
 }
 
-export type FilterFn = (
-  item: any,
-  index?: number,
-  array?: Array<any>
-) => boolean
-
 /**
  * Data storage
  * @typedef {Object} DataCollection
@@ -35,7 +29,4 @@ export type UnidataType = {
   state: DataStateCollection
 }
 
-export type UnidataAction = {
-  type: string
-  payload: any
-}
+export type UnidataAction = (data: DataCollection) => DataCollection

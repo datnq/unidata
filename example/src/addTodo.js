@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useRef, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useModel } from '@datnq/usemodel'
 import { subscribe } from '@datnq/unidata'
 import todoModel from './model/todos'
@@ -8,7 +8,6 @@ import { createLogger } from './logger'
 const AddTodo = ({ dispatch }) => {
   const log = createLogger(dispatch)
 
-  const inputRef = useRef(null)
   const todo = useModel(todoModel)
   const { content, completed } = todo
 
@@ -19,9 +18,12 @@ const AddTodo = ({ dispatch }) => {
   const addtodo = (e) => {
     e.preventDefault()
     if (!todo.isValid) return
-    dispatch({
-      type: 'add',
-      payload: { name: 'todos', value: todo.data },
+
+    const todoData = todo.data
+    dispatch(({ todos }) => {
+      return {
+        todos: [...todos, todoData],
+      }
     })
     todo.clearData()
   }
@@ -34,7 +36,6 @@ const AddTodo = ({ dispatch }) => {
     <div>
       <input
         type='text'
-        ref={inputRef}
         onChange={change}
         name={content.name}
         value={content.value}

@@ -31,10 +31,7 @@ export const useUnidata = (
 
   useEffect(() => {
     if (hasChanged) {
-      dispatch({
-        type: 'init',
-        payload: { data: changedData },
-      })
+      dispatch(() => changedData)
     }
   }, [hasChanged, dispatch, changedData])
 
