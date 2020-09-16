@@ -18,22 +18,20 @@ export const useUnidata = (
   const { dispatch, store } = useContext(UnidataContext)
   const { data, state } = store
 
-  const [changedData, subscribedData] = useMemo(() => {
+  const [changedData, subscribedData, subscribedState] = useMemo(() => {
     const changedData: DataCollection = {}
     const subscribedData = mapValues(subscribed, (v, k) => {
       if (data[k] !== undefined || data[k] === v) return data[k]
       changedData[k] = v
       return v
     })
-    return [changedData, subscribedData]
-  }, [data, subscribed])
+    const subscribedState = values(pick(state, Object.keys(subscribed))).join(
+      '-'
+    )
+    return [changedData, subscribedData, subscribedState]
+  }, [data, state, subscribed])
 
   const hasChanged = Object.keys(changedData).length > 0
-
-  const subscribedState = useMemo(
-    () => values(pick(state, Object.keys(subscribed))).join('-'),
-    [state, subscribed]
-  )
 
   useEffect(() => {
     if (hasChanged) {
