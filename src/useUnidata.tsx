@@ -1,5 +1,5 @@
 import { mapValues, values, pick } from 'lodash'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import { UnidataContext } from './provider'
 import {
   SubscribedComponentProps,
@@ -18,16 +18,22 @@ export const useUnidata = (
   const { dispatch, store } = useContext(UnidataContext)
   const { data, state } = store
 
-  const changedData: DataCollection = {}
-  const subscribedData = mapValues(subscribed, (v, k) => {
-    if (data[k] !== undefined || data[k] === v) return data[k]
-    changedData[k] = v
-    return v
-  })
+  const [changedData, subscribedData] = useMemo(() => {
+    const changedData: DataCollection = {}
+    const subscribedData = mapValues(subscribed, (v, k) => {
+      if (data[k] !== undefined || data[k] === v) return data[k]
+      changedData[k] = v
+      return v
+    })
+    return [changedData, subscribedData]
+  }, [data, subscribed])
 
   const hasChanged = Object.keys(changedData).length > 0
 
-  const subscribedState = values(pick(state, Object.keys(subscribed))).join('-')
+  const subscribedState = useMemo(
+    () => values(pick(state, Object.keys(subscribed))).join('-'),
+    [state, subscribed]
+  )
 
   useEffect(() => {
     if (hasChanged) {
